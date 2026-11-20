@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    margin: 0;
+    padding: 40px;
+}
+
+h1 {
+    color: #2563eb;
+    font-size: 36px;
+}
+
+p {
+    font-size: 16px;
+    color: #666;
+}
+
+header {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+header p {
+    margin-bottom: 0;
+}
+
+main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.resumo {
+    grid-column: 1 / -1;
+}
+
+section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+section h2 {
+    color: #2563eb;
+    margin-top: 0;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .resumo {
+        grid-column: auto;
+    }
+
+    section {
+        padding: 18px;
+    }
+}
+
+.cartao-projeto {
+    background-color: #f4f6f9;
+    padding: 18px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 4px solid #2563eb;
+}
+
+.cartao-projeto h3 {
+    margin-top: 0;
+    color: #2563eb;
+}
+
+.cartao-projeto p {
+    margin-bottom: 0;
+}
+
+.cartao-tarefa {
+    background-color: #ffffff;
+    padding: 18px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.cartao-tarefa h3 {
+    margin-top: 0;
+    color: #1e293b;
+}
+
+.cartao-tarefa p {
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.status-tarefa {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.status-tarefa.pendente {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-tarefa.em-andamento {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.status-tarefa.concluida {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.nova-tarefa form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nova-tarefa input,
+.nova-tarefa textarea {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.nova-tarefa textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.nova-tarefa button {
+    background-color: #2563eb;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.nova-tarefa button:hover {
+    background-color: #1d4ed8;
+}

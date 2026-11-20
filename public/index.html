@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>TaskFlow</h1>
+        <p>Gerencie seus projetos e tarefas.</p>
+    </header>
+
+    <main>
+
+        <section class="resumo">
+            <h2>Visão geral</h2>
+            <p>Acompanhe o andamento dos seus projetos.</p>
+        </section>
+
+        <section class="projetos">
+            <h2>Meus projetos</h2>
+            <div id="lista-projetos">
+                Carregando projetos...
+            </div>
+        </section>
+
+        <section class="nova-tarefa">
+            <h2>Nova tarefa</h2>
+
+            <form id="form-tarefa">
+                <label for="titulo">Título:</label>
+                <input type="text" id="titulo" required>
+
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao"></textarea>
+                <label for="responsavel">Responsável:</label>
+                <select id="responsavel" required>
+                    <option value="">Selecione um responsável</option>
+                </select>
+                <label for="projeto">Projeto:</label>
+                <select id="projeto" required>
+                    <option value="">Selecione um projeto</option>
+                </select>
+                <button type="submit">Cadastrar tarefa</button>
+            </form>
+        </section>
+        <section class="tarefas">
+            <h2>Minhas tarefas</h2>
+
+            <div id="lista-tarefas">
+                Carregando tarefas...
+            </div>
+        </section>
+
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>

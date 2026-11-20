@@ -7,6 +7,7 @@ const projectMembersRoutes = require('./routes/projectMembers');
 const app = express();
 const PORT = 3000;
 app.use(express.json());
+app.use(express.static('public'));
 app.use(usersRoutes);
 app.use(projectsRoutes);
 app.use(tasksRoutes);
