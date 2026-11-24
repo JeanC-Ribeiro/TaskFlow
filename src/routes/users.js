@@ -23,14 +23,18 @@ router.get('/api/users', async (req, res) => {
 router.post('/api/users', async (req, res) => {
     try {
         const { name, email } = req.body;
-        if (!name || !email) {
+
+        const nomeLimpo = typeof name === 'string' ? name.trim() : '';
+        const emailLimpo = typeof email === 'string' ? email.trim() : '';
+
+        if (!nomeLimpo || !emailLimpo) {
             return res.status(400).json({
                 erro: 'Nome e e-mail são obrigatórios.'
             });
         }
         const resultado = await pool.query(
             'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
-            [name, email]
+            [nomeLimpo, emailLimpo]
         );
 
         res.status(201).json(resultado.rows[0]);
@@ -55,7 +59,10 @@ router.put('/api/users/:id', async (req, res) => {
         const { id } = req.params;
         const { name, email } = req.body;
 
-        if (!name || !email) {
+        const nomeLimpo = typeof name === 'string' ? name.trim() : '';
+        const emailLimpo = typeof email === 'string' ? email.trim() : '';
+
+        if (!nomeLimpo || !emailLimpo) {
             return res.status(400).json({
                 erro: 'Nome e e-mail são obrigatórios.'
             });
@@ -63,7 +70,7 @@ router.put('/api/users/:id', async (req, res) => {
 
         const resultado = await pool.query(
             'UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *',
-            [name, email, id]
+            [nomeLimpo, emailLimpo, id]
         );
 
         if (resultado.rows.length === 0) {
@@ -111,6 +118,12 @@ router.delete('/api/users/:id', async (req, res) => {
 
     } catch (erro) {
         console.error(erro);
+
+        if (erro.code === '23503') {
+            return res.status(409).json({
+                erro: 'Não é possível excluir este usuário porque ele está vinculado a tarefas ou projetos.'
+            });
+        }
 
         res.status(500).json({
             erro: 'Erro ao excluir usuário.'

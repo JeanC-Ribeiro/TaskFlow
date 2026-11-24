@@ -25,7 +25,8 @@ router.post('/api/projects', async (req, res) => {
     try {
         const { name, description } = req.body;
 
-        if (!name) {
+        const nomeLimpo = typeof name === 'string' ? name.trim() : '';
+        if (!nomeLimpo) {
             return res.status(400).json({
                 erro: 'O nome do projeto é obrigatório.'
             });
@@ -35,7 +36,7 @@ router.post('/api/projects', async (req, res) => {
             `INSERT INTO projects (name, description)
              VALUES ($1, $2)
              RETURNING *`,
-            [name, description]
+            [nomeLimpo, description]
         );
 
         res.status(201).json(resultado.rows[0]);
@@ -54,7 +55,8 @@ router.put('/api/projects/:id', async (req, res) => {
         const { id } = req.params;
         const { name, description } = req.body;
 
-        if (!name) {
+        const nomeLimpo = typeof name === 'string' ? name.trim() : '';
+        if (!nomeLimpo) {
             return res.status(400).json({
                 erro: 'O nome do projeto é obrigatório.'
             });
@@ -65,7 +67,7 @@ router.put('/api/projects/:id', async (req, res) => {
              SET name = $1, description = $2
              WHERE id = $3
              RETURNING *`,
-            [name, description, id]
+            [nomeLimpo, description, id]
         );
 
         if (resultado.rows.length === 0) {
@@ -107,6 +109,12 @@ router.delete('/api/projects/:id', async (req, res) => {
 
     } catch (erro) {
         console.error(erro);
+
+        if (erro.code === '23503') {
+            return res.status(409).json({
+                erro: 'Não é possível excluir este projeto porque ele possui tarefas ou membros vinculados.'
+            });
+        }
 
         res.status(500).json({
             erro: 'Erro ao excluir projeto.'

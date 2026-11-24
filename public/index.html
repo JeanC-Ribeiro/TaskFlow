@@ -20,14 +20,71 @@
         <section class="resumo">
             <h2>Visão geral</h2>
             <p>Acompanhe o andamento dos seus projetos.</p>
+
+            <div class="indicadores">
+                <div class="indicador pendente">
+                    <h3 id="total-pendentes">0</h3>
+                    <p>Pendentes</p>
+                </div>
+
+                <div class="indicador andamento">
+                    <h3 id="total-andamento">0</h3>
+                    <p>Em andamento</p>
+                </div>
+
+                <div class="indicador concluida">
+                    <h3 id="total-concluidas">0</h3>
+                    <p>Concluídas</p>
+                </div>
+            </div>
         </section>
+
 
         <section class="projetos">
             <h2>Meus projetos</h2>
+
+            <form id="form-projeto">
+                <label for="nome-projeto">Nome do projeto:</label>
+                <input type="text" id="nome-projeto" required>
+
+                <label for="descricao-projeto">Descrição:</label>
+                <textarea id="descricao-projeto"></textarea>
+
+                <button type="submit">Cadastrar projeto</button>
+                <button type="button" id="botao-cancelar-projeto" hidden>
+                    Cancelar edição
+                </button>
+            </form>
+
             <div id="lista-projetos">
                 Carregando projetos...
             </div>
         </section>
+
+        <section class="usuarios">
+            <h2>Gerenciar usuários</h2>
+
+            <form id="form-usuario">
+                <label for="nome-usuario">Nome:</label>
+                <input type="text" id="nome-usuario" required>
+
+                <label for="email-usuario">E-mail:</label>
+                <input type="email" id="email-usuario" required>
+
+                <button type="submit" id="botao-salvar-usuario">
+                    Cadastrar usuário
+                </button>
+
+                <button type="button" id="botao-cancelar-usuario" hidden>
+                    Cancelar
+                </button>
+            </form>
+
+            <div id="lista-usuarios">
+                Carregando usuários...
+            </div>
+        </section>
+
 
         <section class="nova-tarefa">
             <h2>Nova tarefa</h2>
@@ -47,11 +104,48 @@
                     <option value="">Selecione um projeto</option>
                 </select>
                 <button type="submit">Cadastrar tarefa</button>
+                <button type="button" id="botao-cancelar" hidden>
+                    Cancelar edição
+                </button>
             </form>
         </section>
         <section class="tarefas">
             <h2>Minhas tarefas</h2>
 
+            <div class="controles-tarefas">
+
+                <div class="pesquisa-tarefas">
+                    <label for="pesquisa-titulo">Pesquisar tarefa:</label>
+                    <input type="text" id="pesquisa-titulo" placeholder="Digite o título da tarefa...">
+                </div>
+
+                <div class="filtros-tarefas">
+                    <label for="filtro-status">Filtrar por status:</label>
+                    <select id="filtro-status">
+                        <option value="">Todos os status</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em andamento">Em andamento</option>
+                        <option value="Concluída">Concluída</option>
+                    </select>
+                </div>
+
+                <div class="filtros-tarefas">
+                    <label for="filtro-responsavel">Filtrar por responsável:</label>
+                    <select id="filtro-responsavel">
+                        <option value="">Todos os responsáveis</option>
+                    </select>
+                </div>
+
+                <div class="filtros-tarefas">
+                    <label for="filtro-projeto">Filtrar por projeto:</label>
+                    <select id="filtro-projeto">
+                        <option value="">Todos os projetos</option>
+                    </select>
+                </div>
+                <button type="button" id="limpar-filtros">
+                    Limpar filtros
+                </button>
+            </div>
             <div id="lista-tarefas">
                 Carregando tarefas...
             </div>

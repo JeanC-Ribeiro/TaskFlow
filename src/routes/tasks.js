@@ -39,10 +39,16 @@ router.post('/api/tasks', async (req, res) => {
         const { title, description, user_id, project_id, status } = req.body;
         const tituloLimpo = typeof title === 'string' ? title.trim() : '';
         const statusPermitidos = ['Pendente', 'Em andamento', 'Concluída'];
-
-        if (!tituloLimpo || !user_id || !project_id) {
+        
+        if (
+            !tituloLimpo ||
+            !Number.isInteger(Number(user_id)) ||
+            Number(user_id) <= 0 ||
+            !Number.isInteger(Number(project_id)) ||
+            Number(project_id) <= 0
+        ) {
             return res.status(400).json({
-                erro: 'Título, responsável e projeto são obrigatórios.'
+                erro: 'Informe um título, responsável e projeto válidos.'
             });
         }
         if (tituloLimpo.length > 150) {
@@ -86,9 +92,16 @@ router.put('/api/tasks/:id', async (req, res) => {
         const { title, description, status, user_id, project_id } = req.body;
         const tituloLimpo = typeof title === 'string' ? title.trim() : '';
 
-        if (!tituloLimpo || !status || !user_id || !project_id) {
+        if (
+            !tituloLimpo ||
+            !status ||
+            !Number.isInteger(Number(user_id)) ||
+            Number(user_id) <= 0 ||
+            !Number.isInteger(Number(project_id)) ||
+            Number(project_id) <= 0
+        ) {
             return res.status(400).json({
-                erro: 'Título, status, responsável e projeto são obrigatórios.'
+                erro: 'Título, status, responsável e projeto devem ser válidos.'
             });
         }
         if (tituloLimpo.length > 150) {

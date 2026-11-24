@@ -159,3 +159,301 @@ section h2 {
 .nova-tarefa button:hover {
     background-color: #1d4ed8;
 }
+
+.cartao-tarefa button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.cartao-tarefa button:first-of-type {
+    background-color: #2563eb;
+    color: white;
+}
+
+.cartao-tarefa button:first-of-type:hover {
+    background-color: #1d4ed8;
+}
+
+.cartao-tarefa button:last-of-type {
+    background-color: #dc2626;
+    color: white;
+}
+
+.cartao-tarefa button:last-of-type:hover {
+    background-color: #b91c1c;
+}
+
+.cartao-tarefa {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cartao-tarefa button {
+    align-self: flex-start;
+}
+
+.acoes-tarefa {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.acoes-tarefa button {
+    align-self: auto;
+}
+
+.indicadores {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.indicador {
+    background-color: #f4f6f9;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.indicador h3 {
+    font-size: 30px;
+    margin: 0;
+    color: #2563eb;
+}
+
+.indicador p {
+    margin-bottom: 0;
+}
+
+.indicador.pendente h3 {
+    color: #d97706;
+}
+
+.indicador.andamento h3 {
+    color: #2563eb;
+}
+
+.indicador.concluida h3 {
+    color: #16a34a;
+}
+
+@media (max-width: 600px) {
+    .indicadores {
+        grid-template-columns: 1fr;
+    }
+}
+
+.cartao-tarefa {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cartao-tarefa:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.informacoes-usuario {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.informacoes-usuario h3,
+.informacoes-usuario p {
+    margin: 0;
+}
+
+.cartao-usuario {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #dce3ed;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+}
+
+.informacoes-usuario {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.informacoes-usuario h3,
+.informacoes-usuario p {
+    margin: 0;
+}
+
+.acoes-usuario {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .cartao-usuario {
+        flex-wrap: wrap;
+    }
+}
+
+.controles-tarefas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.pesquisa-tarefas,
+.filtros-tarefas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.controles-tarefas label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #475569;
+}
+
+.controles-tarefas input,
+.controles-tarefas select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+
+.controles-tarefas input:focus,
+.controles-tarefas select:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+@media (max-width: 600px) {
+    .controles-tarefas {
+        grid-template-columns: 1fr;
+    }
+}
+
+#limpar-filtros {
+    background-color: #e2e8f0;
+    color: #334155;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    align-self: end;
+}
+
+#limpar-filtros:hover {
+    background-color: #cbd5e1;
+}
+
+.cabecalho-tarefa {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.cabecalho-tarefa h3 {
+    margin: 0;
+}
+
+.cabecalho-tarefa .status-tarefa {
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+.cabecalho-tarefa h3 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.area-status {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 250px;
+}
+
+.area-status label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #64748b;
+}
+
+.area-status select {
+    padding: 9px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #f8fafc;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.acoes-tarefa {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.acoes-tarefa button {
+    padding: 9px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.acoes-tarefa button:first-child {
+    background-color: #2563eb;
+    color: white;
+}
+
+.acoes-tarefa button:first-child:hover {
+    background-color: #1d4ed8;
+}
+
+.acoes-tarefa button:last-child {
+    background-color: #dc2626;
+    color: white;
+}
+
+.acoes-tarefa button:last-child:hover {
+    background-color: #b91c1c;
+}
+
+.cartao-tarefa > p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.cartao-tarefa > p:first-of-type {
+    color: #475569;
+}
+
+.cartao-tarefa > p:nth-of-type(2) {
+    font-size: 14px;
+    color: #64748b;
+}
