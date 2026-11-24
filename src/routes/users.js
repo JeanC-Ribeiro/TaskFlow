@@ -32,6 +32,21 @@ router.post('/api/users', async (req, res) => {
                 erro: 'Nome e e-mail são obrigatórios.'
             });
         }
+        if (nomeLimpo.length > 100) {
+            return res.status(400).json({
+                erro: 'O nome deve ter no máximo 100 caracteres.'
+            });
+        }
+        if (emailLimpo.length > 150) {
+            return res.status(400).json({
+                erro: 'O e-mail deve ter no máximo 150 caracteres.'
+            });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpo)) {
+            return res.status(400).json({
+                erro: 'Informe um e-mail válido.'
+            });
+        }
         const resultado = await pool.query(
             'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
             [nomeLimpo, emailLimpo]
@@ -58,7 +73,12 @@ router.put('/api/users/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { name, email } = req.body;
-
+        const usuarioId = Number(id);
+        if (!Number.isInteger(usuarioId) || usuarioId <= 0) {
+            return res.status(400).json({
+                erro: 'ID do usuário inválido.'
+            });
+        }
         const nomeLimpo = typeof name === 'string' ? name.trim() : '';
         const emailLimpo = typeof email === 'string' ? email.trim() : '';
 
@@ -67,10 +87,24 @@ router.put('/api/users/:id', async (req, res) => {
                 erro: 'Nome e e-mail são obrigatórios.'
             });
         }
-
+        if (nomeLimpo.length > 100) {
+            return res.status(400).json({
+                erro: 'O nome deve ter no máximo 100 caracteres.'
+            });
+        }
+        if (emailLimpo.length > 150) {
+            return res.status(400).json({
+                erro: 'O e-mail deve ter no máximo 150 caracteres.'
+            });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpo)) {
+            return res.status(400).json({
+                erro: 'Informe um e-mail válido.'
+            });
+        }
         const resultado = await pool.query(
             'UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *',
-            [nomeLimpo, emailLimpo, id]
+            [nomeLimpo, emailLimpo, usuarioId]
         );
 
         if (resultado.rows.length === 0) {
@@ -99,10 +133,15 @@ router.put('/api/users/:id', async (req, res) => {
 router.delete('/api/users/:id', async (req, res) => {
     try {
         const { id } = req.params;
-
+        const usuarioId = Number(id);
+        if (!Number.isInteger(usuarioId) || usuarioId <= 0) {
+            return res.status(400).json({
+                erro: 'ID do usuário inválido.'
+            });
+        }
         const resultado = await pool.query(
             'DELETE FROM users WHERE id = $1 RETURNING *',
-            [id]
+            [usuarioId]
         );
 
         if (resultado.rows.length === 0) {

@@ -26,12 +26,21 @@ router.post('/api/projects', async (req, res) => {
         const { name, description } = req.body;
 
         const nomeLimpo = typeof name === 'string' ? name.trim() : '';
+        if (description !== undefined && typeof description !== 'string') {
+            return res.status(400).json({
+                erro: 'A descrição deve ser um texto válido.'
+            });
+        }
         if (!nomeLimpo) {
             return res.status(400).json({
                 erro: 'O nome do projeto é obrigatório.'
             });
         }
-
+        if (nomeLimpo.length > 150) {
+            return res.status(400).json({
+                erro: 'O nome do projeto deve ter no máximo 150 caracteres.'
+            });
+        }
         const resultado = await pool.query(
             `INSERT INTO projects (name, description)
              VALUES ($1, $2)
@@ -54,11 +63,28 @@ router.put('/api/projects/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description } = req.body;
+        const projetoId = Number(id);
+
+        if (!Number.isInteger(projetoId) || projetoId <= 0) {
+            return res.status(400).json({
+                erro: 'ID do projeto inválido.'
+            });
+        }
 
         const nomeLimpo = typeof name === 'string' ? name.trim() : '';
+        if (description !== undefined && typeof description !== 'string') {
+            return res.status(400).json({
+                erro: 'A descrição deve ser um texto válido.'
+            });
+        }
         if (!nomeLimpo) {
             return res.status(400).json({
                 erro: 'O nome do projeto é obrigatório.'
+            });
+        }
+        if (nomeLimpo.length > 150) {
+            return res.status(400).json({
+                erro: 'O nome do projeto deve ter no máximo 150 caracteres.'
             });
         }
 
@@ -67,7 +93,7 @@ router.put('/api/projects/:id', async (req, res) => {
              SET name = $1, description = $2
              WHERE id = $3
              RETURNING *`,
-            [nomeLimpo, description, id]
+            [nomeLimpo, description, projetoId]
         );
 
         if (resultado.rows.length === 0) {
@@ -90,10 +116,17 @@ router.put('/api/projects/:id', async (req, res) => {
 router.delete('/api/projects/:id', async (req, res) => {
     try {
         const { id } = req.params;
+        const projetoId = Number(id);
+
+        if (!Number.isInteger(projetoId) || projetoId <= 0) {
+            return res.status(400).json({
+                erro: 'ID do projeto inválido.'
+            });
+        }
 
         const resultado = await pool.query(
             'DELETE FROM projects WHERE id = $1 RETURNING *',
-            [id]
+            [projetoId]
         );
 
         if (resultado.rows.length === 0) {

@@ -39,6 +39,10 @@ async function carregarProjetos() {
                 formularioProjeto.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
             botaoExcluir.addEventListener('click', async () => {
+                if (projetoEmEdicao && projetoEmEdicao.id === projeto.id) {
+                    alert('Este projeto está sendo editado. Cancele a edição antes de excluí-lo.');
+                    return;
+                }
                 const confirmar = confirm(
                     `Tem certeza que deseja excluir o projeto "${projeto.name}"?`
                 );
@@ -251,7 +255,6 @@ async function carregarTarefas() {
                 document.getElementById('responsavel').value = tarefa.user_id;
                 document.getElementById('projeto').value = tarefa.project_id;
 
-                console.log('Tarefa carregada para edição:', tarefa);
                 formularioTarefa.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center'
@@ -318,17 +321,17 @@ const campoDescricaoProjeto = document.getElementById('descricao-projeto');
 let projetoEmEdicao = null;
 const botaoCancelarProjeto = document.getElementById('botao-cancelar-projeto');
 
+botaoCancelarProjeto.addEventListener('click', () => {
+    projetoEmEdicao = null;
+
+    formularioProjeto.reset();
+
+    formularioProjeto.querySelector('button[type="submit"]').textContent = 'Cadastrar projeto';
+
+    botaoCancelarProjeto.hidden = true;
+});
+
 formularioProjeto.addEventListener('submit', async (event) => {
-    botaoCancelarProjeto.addEventListener('click', () => {
-        projetoEmEdicao = null;
-
-        formularioProjeto.reset();
-
-        formularioProjeto.querySelector('button[type="submit"]').textContent = 'Cadastrar projeto';
-
-        botaoCancelarProjeto.hidden = true;
-    });
-
     event.preventDefault();
 
     console.log('Cadastro de projeto iniciado!');
@@ -412,8 +415,7 @@ function aplicarFiltros() {
     cartoes.forEach(cartao => {
         const titulo = cartao.querySelector('h3').textContent.toLowerCase();
 
-        const status = cartao.querySelector('.status-tarefa').textContent;
-
+        const status = cartao.querySelector('.status-tarefa').value;
         const responsavelId = cartao.dataset.responsavelId;
         const projetoId = cartao.dataset.projetoId;
 
@@ -481,10 +483,7 @@ formularioUsuario.addEventListener('submit', async (event) => {
     const estavaEditando = Boolean(usuarioEmEdicao);
     const botao = botaoSalvarUsuario;
 
-    botao.disabled = true;
-    botao.textContent = estavaEditando
-        ? 'Salvando...'
-        : 'Cadastrando...';
+
     const nome = document.getElementById('nome-usuario').value;
     const email = document.getElementById('email-usuario').value;
     const nomeLimpo = nome.trim();
@@ -499,6 +498,11 @@ formularioUsuario.addEventListener('submit', async (event) => {
         alert('Informe um e-mail válido.');
         return;
     }
+
+    botao.disabled = true;
+    botao.textContent = estavaEditando
+        ? 'Salvando...'
+        : 'Cadastrando...';
 
     try {
         const url = usuarioEmEdicao
@@ -544,7 +548,7 @@ formularioUsuario.addEventListener('submit', async (event) => {
         alert('Não foi possível conectar ao servidor.');
     } finally {
         botao.disabled = false;
-        botao.textContent = estavaEditando
+        botao.textContent = usuarioEmEdicao
             ? 'Salvar alterações'
             : 'Cadastrar usuário';
     }
@@ -750,7 +754,7 @@ formularioTarefa.addEventListener('submit', async function (event) {
         alert('Não foi possível conectar ao servidor.');
     } finally {
         botao.disabled = false;
-        botao.textContent = estavaEditando
+        botao.textContent = tarefaEmEdicao
             ? 'Salvar alterações'
             : 'Cadastrar tarefa';
     }
@@ -758,42 +762,63 @@ formularioTarefa.addEventListener('submit', async function (event) {
 });
 
 async function carregarUsuarios() {
-    const resposta = await fetch('/api/users');
+    try {
+        const resposta = await fetch('/api/users');
 
-    const usuarios = await resposta.json();
+        if (!resposta.ok) {
+            throw new Error('Erro ao buscar usuários.');
+        }
 
-    const campoResponsavel = document.getElementById('responsavel');
-    campoResponsavel.innerHTML = '<option value="">Selecione um responsável</option>';
-    usuarios.forEach(usuario => {
-        const opcao = document.createElement('option');
+        const usuarios = await resposta.json();
 
-        opcao.value = usuario.id;
-        opcao.textContent = usuario.name;
+        const campoResponsavel = document.getElementById('responsavel');
 
-        campoResponsavel.appendChild(opcao);
-    });
+        campoResponsavel.innerHTML = '<option value="">Selecione um responsável</option>';
+
+        usuarios.forEach(usuario => {
+            const opcao = document.createElement('option');
+
+            opcao.value = usuario.id;
+            opcao.textContent = usuario.name;
+
+            campoResponsavel.appendChild(opcao);
+        });
+
+    } catch (erro) {
+        console.error('Erro ao carregar usuários:', erro);
+        alert('Não foi possível carregar os responsáveis.');
+    }
 }
 
 carregarUsuarios();
 
-
 async function carregarProjetosFormulario() {
-    const resposta = await fetch('/api/projects');
+    try {
+        const resposta = await fetch('/api/projects');
 
-    const projetos = await resposta.json();
+        if (!resposta.ok) {
+            throw new Error('Erro ao buscar projetos.');
+        }
 
-    const campoProjeto = document.getElementById('projeto');
+        const projetos = await resposta.json();
 
-    campoProjeto.innerHTML = '<option value="">Selecione um projeto</option>';
+        const campoProjeto = document.getElementById('projeto');
 
-    projetos.forEach(projeto => {
-        const opcao = document.createElement('option');
+        campoProjeto.innerHTML = '<option value="">Selecione um projeto</option>';
 
-        opcao.value = projeto.id;
-        opcao.textContent = projeto.name;
+        projetos.forEach(projeto => {
+            const opcao = document.createElement('option');
 
-        campoProjeto.appendChild(opcao);
-    });
+            opcao.value = projeto.id;
+            opcao.textContent = projeto.name;
+
+            campoProjeto.appendChild(opcao);
+        });
+
+    } catch (erro) {
+        console.error('Erro ao carregar projetos:', erro);
+        alert('Não foi possível carregar os projetos.');
+    }
 }
 
 

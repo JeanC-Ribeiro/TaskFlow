@@ -38,14 +38,21 @@ router.post('/api/tasks', async (req, res) => {
     try {
         const { title, description, user_id, project_id, status } = req.body;
         const tituloLimpo = typeof title === 'string' ? title.trim() : '';
+        const usuarioId = Number(user_id);
+        const projetoId = Number(project_id);
+        if (description !== undefined && typeof description !== 'string') {
+            return res.status(400).json({
+                erro: 'A descrição deve ser um texto válido.'
+            });
+        }
         const statusPermitidos = ['Pendente', 'Em andamento', 'Concluída'];
-        
+
         if (
             !tituloLimpo ||
-            !Number.isInteger(Number(user_id)) ||
-            Number(user_id) <= 0 ||
-            !Number.isInteger(Number(project_id)) ||
-            Number(project_id) <= 0
+            !Number.isInteger(usuarioId) ||
+            usuarioId <= 0 ||
+            !Number.isInteger(projetoId) ||
+            projetoId <= 0
         ) {
             return res.status(400).json({
                 erro: 'Informe um título, responsável e projeto válidos.'
@@ -65,8 +72,7 @@ router.post('/api/tasks', async (req, res) => {
             `INSERT INTO tasks (title, description, user_id, project_id, status)
              VALUES ($1, $2, $3, $4, $5)
              RETURNING *`,
-            [tituloLimpo, description, user_id, project_id, status || 'Pendente']
-        );
+            [tituloLimpo, description, usuarioId, projetoId, status || 'Pendente']);
 
         res.status(201).json(resultado.rows[0]);
 
@@ -90,15 +96,28 @@ router.put('/api/tasks/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, status, user_id, project_id } = req.body;
+        const tarefaId = Number(id);
+        if (!Number.isInteger(tarefaId) || tarefaId <= 0) {
+            return res.status(400).json({
+                erro: 'ID da tarefa inválido.'
+            });
+        }
         const tituloLimpo = typeof title === 'string' ? title.trim() : '';
+        const usuarioId = Number(user_id);
+        const projetoId = Number(project_id);
+        if (description !== undefined && typeof description !== 'string') {
+            return res.status(400).json({
+                erro: 'A descrição deve ser um texto válido.'
+            });
+        }
 
         if (
             !tituloLimpo ||
             !status ||
-            !Number.isInteger(Number(user_id)) ||
-            Number(user_id) <= 0 ||
-            !Number.isInteger(Number(project_id)) ||
-            Number(project_id) <= 0
+            !Number.isInteger(usuarioId) ||
+            usuarioId <= 0 ||
+            !Number.isInteger(projetoId) ||
+            projetoId <= 0
         ) {
             return res.status(400).json({
                 erro: 'Título, status, responsável e projeto devem ser válidos.'
@@ -124,9 +143,8 @@ router.put('/api/tasks/:id', async (req, res) => {
                  project_id = $5
              WHERE id = $6
              RETURNING *`,
-            [tituloLimpo, description, status, user_id, project_id, id]
+            [tituloLimpo, description, status, usuarioId, projetoId, tarefaId]
         );
-
         if (resultado.rows.length === 0) {
             return res.status(404).json({
                 erro: 'Tarefa não encontrada.'
@@ -151,10 +169,16 @@ router.put('/api/tasks/:id', async (req, res) => {
 router.delete('/api/tasks/:id', async (req, res) => {
     try {
         const { id } = req.params;
+        const tarefaId = Number(id);
+        if (!Number.isInteger(tarefaId) || tarefaId <= 0) {
+            return res.status(400).json({
+                erro: 'ID da tarefa inválido.'
+            });
+        }
 
         const resultado = await pool.query(
             'DELETE FROM tasks WHERE id = $1 RETURNING *',
-            [id]
+            [tarefaId]
         );
 
         if (resultado.rows.length === 0) {

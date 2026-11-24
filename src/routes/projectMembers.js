@@ -7,10 +7,16 @@ router.post('/api/projects/:id/members', async (req, res) => {
     try {
         const { id } = req.params;
         const { user_id } = req.body;
-
-        if (!user_id) {
+        const projetoId = Number(id);
+        const usuarioId = Number(user_id);
+        if (
+            !Number.isInteger(projetoId) ||
+            projetoId <= 0 ||
+            !Number.isInteger(usuarioId) ||
+            usuarioId <= 0
+        ) {
             return res.status(400).json({
-                erro: 'O ID do usuário é obrigatório.'
+                erro: 'Informe IDs válidos para o projeto e o usuário.'
             });
         }
 
@@ -18,7 +24,7 @@ router.post('/api/projects/:id/members', async (req, res) => {
             `INSERT INTO project_members (project_id, user_id)
              VALUES ($1, $2)
              RETURNING *`,
-            [id, user_id]
+            [projetoId, usuarioId]
         );
 
         res.status(201).json(resultado.rows[0]);
@@ -47,7 +53,13 @@ router.post('/api/projects/:id/members', async (req, res) => {
 router.get('/api/projects/:id/members', async (req, res) => {
     try {
         const { id } = req.params;
+        const projetoId = Number(id);
 
+        if (!Number.isInteger(projetoId) || projetoId <= 0) {
+            return res.status(400).json({
+                erro: 'ID do projeto inválido.'
+            });
+        }
         const resultado = await pool.query(
             `SELECT
                 users.id,
@@ -59,7 +71,7 @@ router.get('/api/projects/:id/members', async (req, res) => {
                 ON project_members.user_id = users.id
              WHERE project_members.project_id = $1
              ORDER BY users.name`,
-            [id]
+            [projetoId]
         );
 
         res.json(resultado.rows);
@@ -75,12 +87,25 @@ router.get('/api/projects/:id/members', async (req, res) => {
 router.delete('/api/projects/:id/members/:userId', async (req, res) => {
     try {
         const { id, userId } = req.params;
+        const projetoId = Number(id);
+        const usuarioId = Number(userId);
+
+        if (
+            !Number.isInteger(projetoId) ||
+            projetoId <= 0 ||
+            !Number.isInteger(usuarioId) ||
+            usuarioId <= 0
+        ) {
+            return res.status(400).json({
+                erro: 'IDs do projeto e do usuário inválidos.'
+            });
+        }
 
         const resultado = await pool.query(
             `DELETE FROM project_members
              WHERE project_id = $1 AND user_id = $2
              RETURNING *`,
-            [id, userId]
+            [projetoId, usuarioId]
         );
 
         if (resultado.rows.length === 0) {
