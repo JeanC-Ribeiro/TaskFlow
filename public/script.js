@@ -629,8 +629,8 @@ async function carregarListaUsuarios() {
 
                     alert('Usuário excluído com sucesso!');
 
-                    carregarListaUsuarios();
-                    carregarUsuarios();
+                    await carregarListaUsuarios();
+                    await carregarUsuarios();
 
                 } catch (erro) {
                     console.error('Erro:', erro);

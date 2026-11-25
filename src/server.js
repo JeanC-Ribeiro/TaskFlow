@@ -4,10 +4,33 @@ const usersRoutes = require('./routes/users');
 const projectsRoutes = require('./routes/projects');
 const tasksRoutes = require('./routes/tasks');
 const projectMembersRoutes = require('./routes/projectMembers');
+const authRoutes = require('./routes/auth');
+const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const app = express();
 const PORT = 3000;
+
 app.use(express.json());
+
+app.use(session({
+    store: new pgSession({
+        pool: pool,
+        tableName: 'user_sessions',
+        createTableIfMissing: true
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax'
+    }
+}));
+
 app.use(express.static('public'));
+app.use(authRoutes);
 app.use(usersRoutes);
 app.use(projectsRoutes);
 app.use(tasksRoutes);
